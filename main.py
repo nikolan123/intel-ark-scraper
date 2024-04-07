@@ -44,11 +44,6 @@ with open('cpulinks.txt', 'r') as mrfile:
             jsonsy = getinfo(mrline.replace('\n', ""))
         except requests.exceptions.ConnectionError:
             print(f"[ERROR] Failed to get {mrline}, retrying in 10 seconds")
-            sleep(10)
-            try:
-                jsonsy = getinfo(mrline.replace('\n', ""))
-            except Exception as e:
-                print('[ERROR] Still cant get')
         except Exception as e:
             print(f"[ERROR] Failed to get info for {mrline}: {e}")
         print(f"[INFO] Scraped {jsonsy['Name']}, {counter} more to do")
