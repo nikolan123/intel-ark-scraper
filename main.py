@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from time import sleep
 #site:ark.intel.com inurl:processor inurl:en
 def getinfo(url):
     response = requests.get(url)
@@ -33,9 +34,25 @@ def getinfo(url):
 print("[INFO] Getting links from cpulinks.txt")
 with open('cpulinks.txt', 'r') as mrfile:
     mrlines = mrfile.readlines()
+    counter = 0
+    for line in mrlines:
+        counter += 1
+    print(f"[INFO] Found {counter} links")
     for mrline in mrlines:
-        jsonsy = getinfo(mrline.replace('\n', ""))
-        print(f"[INFO] Scraped {jsonsy['Name']}")
+        counter -= 1
+        try:
+            jsonsy = getinfo(mrline.replace('\n', ""))
+        except requests.exceptions.ConnectionError:
+            print(f"[ERROR] Failed to get {mrline}, retrying in 10 seconds")
+            sleep(10)
+            try:
+                jsonsy = getinfo(mrline.replace('\n', ""))
+            except Exception as e:
+                print('[ERROR] Still cant get')
+        except Exception as e:
+            print(f"[ERROR] Failed to get info for {mrline}: {e}")
+        print(f"[INFO] Scraped {jsonsy['Name']}, {counter} more to do")
         with open("cpuinfo.json", 'a') as mrfile2:
             json.dump(jsonsy, mrfile2, indent=4)
+            mrfile2.write(',')
 print('[INFO] Finished')
