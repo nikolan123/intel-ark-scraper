@@ -14,6 +14,7 @@ def getinfo(url):
             print("[ERROR] Processor name not found.")
         mrvar = {}
         mrvar['Name'] = processor_name
+        mrvar['Ark URL'] = url
         specifications_section = soup.find('section', class_='specs-blade', id='tab-blade-1-0-1')
         if specifications_section:
             specifications = specifications_section.find_all('li')
