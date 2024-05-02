@@ -46,7 +46,10 @@ with open('cpulinks.txt', 'r') as mrfile:
             print(f"[ERROR] Failed to get {mrline}")
         except Exception as e:
             print(f"[ERROR] Failed to get info for {mrline}: {e}")
-        print(f"[INFO] Scraped {jsonsy['Name']}, {counter} more to do")
+        try:
+            print(f"[INFO] Scraped {jsonsy['Name']}, {counter} more to do")
+        except Exception as e:
+            print(f"[INFO] Error {e}")
         with open("cpuinfo.json", 'a') as mrfile2:
             json.dump(jsonsy, mrfile2, indent=4)
             mrfile2.write(',')
