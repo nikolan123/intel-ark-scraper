@@ -7,7 +7,7 @@ def getinfo(url):
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        processor_name_element = soup.find('h1', class_='h1')
+        processor_name_element = soup.find('title')
         if processor_name_element:
             processor_name = processor_name_element.text.strip()
         else:
@@ -15,12 +15,12 @@ def getinfo(url):
         mrvar = {}
         mrvar['Name'] = processor_name
         mrvar['Ark URL'] = url
-        specifications_section = soup.find('section', class_='specs-blade', id='tab-blade-1-0-1')
+        specifications_section = soup.find('div', class_='tech-section', id='specs-1-0-1')
         if specifications_section:
-            specifications = specifications_section.find_all('li')
+            specifications = specifications_section.find_all('div', class_="tech-section-row")
             for spec in specifications:
-                spec_label = spec.find('span', class_='label')
-                spec_value = spec.find('span', class_='value')
+                spec_label = spec.find('div', class_='tech-label').find('span')
+                spec_value = spec.find('div', class_='tech-data').find('span')
                 if spec_label and spec_value:
                     spec_label_text = spec_label.text.strip()
                     spec_value_text = spec_value.text.strip()
